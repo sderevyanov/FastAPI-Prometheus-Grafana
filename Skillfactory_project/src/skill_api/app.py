@@ -74,12 +74,10 @@ app.add_middleware(
 
 path_m = path_models()
 path_sc = path_scaler()
+
+# Зададим параметры для pushgateway 
 registry = CollectorRegistry()
 g = Gauge('Wine_model_metric_Accuracy', 'Metric after train Wine model', registry=registry)
-# g = Gauge('job_last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
-# g.set_to_current_time()
-# push_to_gateway('localhost:9091', job='batchA', registry=registry)
-# g = Gauge('Wine_model_metric_Accuracy', 'Metric after train Wine model')
 
 # ---------------------------------------------------------------------------------------------------
 
@@ -178,7 +176,7 @@ async def train_model(data_js: ModelTrain):
 
     # Посчитаем время затраченное на обучение
     time_fit_all = datetime.now() - t_train_start
-    logger.info(f'Обучение модели на всех данных завершено. Время обучения: {time_fit_all}')
+    logger.info(f'Обучение модели завершено. Время обучения: {time_fit_all}')
 
     # Спрогнозируем результаты
     pred_y = gbm.predict(X_test_scaled)
@@ -192,7 +190,7 @@ async def train_model(data_js: ModelTrain):
     filename_sc = os.path.join(path_sc, "Wine_scaler" + '.joblib')
     joblib.dump(scaler, open(filename_sc, 'wb'))
 
-    logger.info('Модель модель нормализации данных, сохранены.')
+    logger.info('Модель и модель нормализации данных, сохранены.')
     logger.info('Обучение завершено.')
 
     # Передадим метрики в prometheus через push_to_gateway
@@ -317,7 +315,7 @@ async def train_model(data_js: ModelTrain):
 
     # Посчитаем время затраченное на обучение
     time_fit_all = datetime.now() - t_train_start
-    logger.info(f'Обучение модели на всех данных завершено. Время обучения: {time_fit_all}')
+    logger.info(f'Обучение модели завершено. Время обучения: {time_fit_all}')
 
     # Спрогнозируем результаты
     pred_y = gbm.predict(X_test_scaled)
@@ -331,7 +329,7 @@ async def train_model(data_js: ModelTrain):
     filename_sc = os.path.join(path_sc, "Wine_scaler" + '.joblib')
     joblib.dump(scaler, open(filename_sc, 'wb'))
 
-    logger.info('Модель модель нормализации данных, сохранены.')
+    logger.info('Модель и модель нормализации данных, сохранены.')
     logger.info('Обучение завершено.')
 
     # Передадим метрики в prometheus через push_to_gateway
